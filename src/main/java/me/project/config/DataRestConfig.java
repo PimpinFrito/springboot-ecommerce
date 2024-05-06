@@ -1,5 +1,6 @@
 package me.project.config;
 
+import jakarta.persistence.EntityManager;
 import me.project.entity.Product;
 import me.project.entity.ProductCategory;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,12 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 public class DataRestConfig implements RepositoryRestConfigurer {
+
+    private EntityManager entityManager;
+
+    public DataRestConfig(EntityManager entityManager){
+        this.entityManager = entityManager;
+    }
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
@@ -28,5 +35,9 @@ public class DataRestConfig implements RepositoryRestConfigurer {
                 .withItemExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
                 .withCollectionExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
 
+        //Expose ids for sidebar menu
+        config.exposeIdsFor(ProductCategory.class);
+
     }
+
 }
