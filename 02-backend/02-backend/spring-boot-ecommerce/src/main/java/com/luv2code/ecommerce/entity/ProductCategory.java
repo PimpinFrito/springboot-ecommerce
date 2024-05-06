@@ -1,14 +1,14 @@
-package me.project.entity;
+package com.luv2code.ecommerce.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name="product_category")
+// @Data -- known bug
 @Getter
 @Setter
 public class ProductCategory {
@@ -25,3 +25,10 @@ public class ProductCategory {
     private Set<Product> products;
 
 }
+
+
+
+
+
+
+
