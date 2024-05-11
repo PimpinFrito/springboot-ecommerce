@@ -29,6 +29,17 @@ export class ProductService {
     return this.getProducts(url);
   }
 
+  getProductListPagination(
+    thePage: number = 0,
+    pageSize: number = 20,
+    categoryId: number
+  ): Observable<Product[]> {
+    let url =
+      `${this.productUrl}/search/findByCategoryId?id=${categoryId}` +
+      `&page=${thePage}&size=${pageSize}`;
+    return this.getProducts(url);
+  }
+
   getCategoryList(): Observable<ProductCategory[]> {
     return this.httpClient
       .get<GetCategoryResponse>(this.baseCategoryUrl)
@@ -45,11 +56,22 @@ export class ProductService {
       .get<GetResponseProducts>(url)
       .pipe(map((response) => response._embedded.products));
   }
+
+  getProductDetails(productId: number): Observable<Product> {
+    const productUrl = this.productUrl + `/${productId}`;
+    return this.httpClient.get<Product>(productUrl);
+  }
 }
 
 interface GetResponseProducts {
   _embedded: {
     products: Product[];
+  };
+  page: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    number: number;
   };
 }
 
