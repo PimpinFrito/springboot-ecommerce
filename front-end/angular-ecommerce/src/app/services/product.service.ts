@@ -8,10 +8,6 @@ import { ProductCategory } from '../common/product-category';
   providedIn: 'root',
 })
 export class ProductService {
-  getCategories(): import('../common/product-category').ProductCategory[] {
-    throw new Error('Method not implemented.');
-  }
-
   private baseUrl = 'http://localhost:8080/api/';
   private productUrl = this.baseUrl + `products`;
   private baseCategoryUrl = this.baseUrl + `product-category`;
@@ -26,18 +22,23 @@ export class ProductService {
       ? `${this.productUrl}/search/findByCategoryId?id=${categoryId}`
       : this.productUrl;
 
-    return this.getProducts(url);
+    return this.getResults(url);
   }
 
   getProductListPagination(
-    thePage: number = 0,
+    thePage: number = 1,
     pageSize: number = 20,
     categoryId: number
-  ): Observable<Product[]> {
-    let url =
-      `${this.productUrl}/search/findByCategoryId?id=${categoryId}` +
-      `&page=${thePage}&size=${pageSize}`;
-    return this.getProducts(url);
+  ): Observable<GetResponseProducts> {
+    let url: string;
+    if (categoryId) {
+      url =
+        `${this.productUrl}/search/findByCategoryId?id=${categoryId}` +
+        `&page=${thePage}&size=${pageSize}`;
+    } else {
+      url = `${this.productUrl}?page=${thePage}&size=${pageSize}`;
+    }
+    return this.getResultsPagination(url);
   }
 
   getCategoryList(): Observable<ProductCategory[]> {
@@ -48,10 +49,23 @@ export class ProductService {
 
   getSearchResults(keyword: string): Observable<Product[]> {
     const url = this.searchUrl + keyword;
-    return this.getProducts(url);
+    return this.getResults(url);
   }
 
-  private getProducts(url: string): Observable<Product[]> {
+  getSearchResultsPagination(
+    thePage: number = 1,
+    pageSize: number = 20,
+    keyword: string
+  ): Observable<GetResponseProducts> {
+    const url = this.searchUrl + keyword;
+    return this.getResultsPagination(url);
+  }
+
+  private getResultsPagination(url: string): Observable<GetResponseProducts> {
+    return this.httpClient.get<GetResponseProducts>(url);
+  }
+
+  private getResults(url: string): Observable<Product[]> {
     return this.httpClient
       .get<GetResponseProducts>(url)
       .pipe(map((response) => response._embedded.products));
