@@ -6,8 +6,10 @@
           <img src="{{ product.imageUrl }}" class="detail-img" width="200px" />
 
           <h3>{{ product.name }}</h3>
-          <div class="price">$19.22</div>
-          <a href="shopping-detail.html" class="primary-btn">Add to cart</a>
+          <div class="price">{{ product.unitPrice }}</div>
+          <button (click)="addToCart()" href="#" class="btn btn-primary btn-sm">
+            Add to cart
+          </button>
           <hr />
 
           <h4>Product Description</h4>
@@ -15,7 +17,7 @@
             {{ product.description }}
           </p>
 
-          <a href="home.html">Back to Product List</a>
+          <a routerLink="/products">Back to Product List</a>
         </div>
       </div>
     </div>

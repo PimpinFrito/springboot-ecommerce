@@ -726,6 +726,11 @@ table.table.table-bordered th{
 .detail-img{
   width: 30%;
 }
+
+.btn .btn-primary{
+  background-color: #0d6efd !important;
+  background-color: black;
+}
 /**/
 
 /* 
