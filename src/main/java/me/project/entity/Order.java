@@ -43,12 +43,10 @@ public class Order {
     private Customer customer;
 
 
-    @Column(name = "shipping_address_id")
     @OneToOne(cascade = CascadeType.ALL)
     private Address shippingAddress;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @Column(name = "billing_address_id")
     private Address billingAddress;
 
     public void add(OrderItem item){

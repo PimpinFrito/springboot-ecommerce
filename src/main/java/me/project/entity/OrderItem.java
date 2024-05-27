@@ -13,13 +13,14 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String code;
-    private String name;
-
-
-    private Long productId;
+    private String image_url;
+    private int quantity;
+    private int unitPrice;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    private Long productId;
+
 }
