@@ -66,7 +66,7 @@ export class CheckoutComponent implements OnInit {
         state: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [
           Validators.required,
-          Validators.minLength(2),
+          Validators.minLength(5),
           Luv2ShopValidators.notOnlyWhiteSpace,
         ]),
       }),
@@ -85,15 +85,25 @@ export class CheckoutComponent implements OnInit {
         state: new FormControl('', [Validators.required]),
         zipCode: new FormControl('', [
           Validators.required,
-          Validators.minLength(2),
+          Validators.minLength(5),
           Luv2ShopValidators.notOnlyWhiteSpace,
         ]),
       }),
       creditCard: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
+        cardType: new FormControl('', [Validators.required]),
+        nameOnCard: new FormControl('', [
+          Validators.required,
+          Validators.minLength(2),
+          Luv2ShopValidators.notOnlyWhiteSpace,
+        ]),
+        cardNumber: new FormControl('', [
+          Validators.required,
+          Validators.pattern('[0-9]{16}'),
+        ]),
+        securityCode: new FormControl('', [
+          Validators.required,
+          Validators.pattern('[0-9]{3}'),
+        ]),
         expirationMonth: [''],
         expirationYear: [''],
       }),
@@ -107,11 +117,14 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cartService.totalPrice.subscribe((data) => (this.totalPrice = data));
-    this.cartService.totalQuantity.subscribe(
-      (data) => (this.totalQuantity = data)
-    );
-    //Get month and year list from FormService
+    this.reviewCartDetails();
+
+    this.getCreditCardDateRange();
+
+    this.populateCountries();
+  }
+
+  private getCreditCardDateRange() {
     let currentMonth = new Date().getMonth() + 1;
     this.formService
       .getCreditCardMonths(currentMonth)
@@ -119,8 +132,13 @@ export class CheckoutComponent implements OnInit {
     this.formService
       .getCreditCardYears()
       .subscribe((data) => (this.creditCardYears = data));
+  }
 
-    this.populateCountries();
+  private reviewCartDetails() {
+    this.cartService.totalPrice.subscribe((data) => (this.totalPrice = data));
+    this.cartService.totalQuantity.subscribe(
+      (data) => (this.totalQuantity = data)
+    );
   }
 
   copyShippingAddressToBillingAddress(event: any) {
@@ -200,4 +218,47 @@ export class CheckoutComponent implements OnInit {
   get shippingAddressZipcode() {
     return this.checkoutFormGroup.get('shippingAddress.zipCode');
   }
+
+  get billingAddressStreet() {
+    return this.checkoutFormGroup.get('billingAddress.street');
+  }
+
+  get billingAddressCity() {
+    return this.checkoutFormGroup.get('billingAddress.city');
+  }
+  get billingAddressState() {
+    return this.checkoutFormGroup.get('billingAddress.state');
+  }
+
+  get billingAddressCountry() {
+    return this.checkoutFormGroup.get('billingAddress.country');
+  }
+
+  get billingAddressZipcode() {
+    return this.checkoutFormGroup.get('billingAddress.zipCode');
+  }
+
+  get creditCardType() {
+    return this.checkoutFormGroup.get('creditCard.cardType');
+  }
+
+  get creditCardNameOnCard() {
+    return this.checkoutFormGroup.get('creditCard.nameOnCard');
+  }
+
+  get creditCardNumber() {
+    return this.checkoutFormGroup.get('creditCard.cardNumber');
+  }
+
+  get creditCardSecurityCode() {
+    return this.checkoutFormGroup.get('creditCard.securityCode');
+  }
+
+  // get creditCardExpirationMonth() {
+  //   return this.checkoutFormGroup.get('creditCard.expirationMonth');
+  // }
+
+  // get creditCardExpirationYear() {
+  //   return this.checkoutFormGroup.get('creditCard.expirationYear');
+  // }
 }

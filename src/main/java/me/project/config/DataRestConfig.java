@@ -23,23 +23,6 @@ public class DataRestConfig implements RepositoryRestConfigurer {
         disableHttpMethods(Country.class, config, theUnsupportedActions);
         disableHttpMethods(State.class, config, theUnsupportedActions);
 
-        // disable HTTP methods for Product: PUT, POST, DELETE and PATCH
-//        config.getExposureConfiguration()
-//                .forDomainType(Product.class)
-//                .withItemExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-//                .withCollectionExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
-//
-//        // disable HTTP methods for ProductCategory: PUT, POST, DELETE and PATCH
-//        config.getExposureConfiguration()
-//                .forDomainType(ProductCategory.class)
-//                .withItemExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-//                .withCollectionExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
-//
-//        config.getExposureConfiguration()
-//                .forDomainType(Country.class)
-//                .withItemExposure((metadata, httpMethods) -> httpMethods.disable((theUnsupportedActions)))
-//                .withCollectionExposure((metadata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
-
         //Expose ids for sidebar menu
         this.exposeIds(config);
 

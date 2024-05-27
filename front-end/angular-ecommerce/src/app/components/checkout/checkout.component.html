@@ -243,7 +243,7 @@
         <!-- billing address -->
 
         <div formGroupName="billingAddress" class="form-area">
-          <h3>Billing Address</h3>
+          <h3>Shipping Address</h3>
 
           <div class="row">
             <div class="col-md-2">
@@ -259,6 +259,18 @@
                     {{ country.name }}
                   </option>
                 </select>
+                <div
+                  *ngIf="
+                    billingAddressCountry?.invalid &&
+                    (billingAddressCountry?.dirty ||
+                      billingAddressCountry?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="billingAddressCountry?.errors?.['required']">
+                    > Country is required
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -270,6 +282,23 @@
             <div class="col-md-10">
               <div class="input-space">
                 <input formControlName="street" type="text" />
+                <div
+                  *ngIf="
+                    billingAddressStreet?.invalid &&
+                    (billingAddressStreet?.dirty ||
+                      billingAddressStreet?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="billingAddressStreet?.errors?.['required'] || billingAddressStreet?.errors?.['notOnlyWhiteSpace']"
+                  >
+                    Street is required
+                  </div>
+                  <div *ngIf="billingAddressStreet?.errors?.['minlength']">
+                    Minimum length is 2 characters
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -281,6 +310,22 @@
             <div class="col-md-10">
               <div class="input-space">
                 <input formControlName="city" type="text" />
+                <div
+                  *ngIf="
+                    billingAddressCity?.invalid &&
+                    (billingAddressCity?.dirty || billingAddressCity?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="billingAddressCity?.errors?.['required'] || billingAddressCity?.errors?.['notOnlyWhiteSpace']"
+                  >
+                    City is required
+                  </div>
+                  <div *ngIf="billingAddressCity?.errors?.['minlength']">
+                    Minimum length is 2 characters
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -291,10 +336,24 @@
             <div class="col-md-10">
               <div class="input-space">
                 <select formControlName="state">
-                  <option *ngFor="let state of billingStates" [ngValue]="state">
+                  <option
+                    *ngFor="let state of shippingStates"
+                    [ngValue]="state"
+                  >
                     {{ state.name }}
                   </option>
                 </select>
+                <div
+                  *ngIf="
+                    billingAddressState?.invalid &&
+                    (billingAddressState?.dirty || billingAddressState?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="billingAddressState?.errors?.['required']">
+                    > State is required
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -306,6 +365,23 @@
             <div class="col-md-10">
               <div class="input-space">
                 <input formControlName="zipCode" type="text" />
+                <div
+                  *ngIf="
+                    billingAddressZipcode?.invalid &&
+                    (billingAddressZipcode?.dirty ||
+                      billingAddressZipcode?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="billingAddressZipcode?.errors?.['required'] || billingAddressZipcode?.errors?.['notOnlyWhiteSpace']"
+                  >
+                    ZipCode is required
+                  </div>
+                  <div *ngIf="billingAddressZipcode?.errors?.['minlength']">
+                    Minimum length is 5 characters
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -325,6 +401,17 @@
                   <option>Visa</option>
                   <option>Mastercard</option>
                 </select>
+                <div
+                  *ngIf="
+                    creditCardType?.invalid &&
+                    (creditCardType?.dirty || creditCardType?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="creditCardType?.errors?.['required']">
+                    Credit Card type is required
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -336,6 +423,23 @@
             <div class="col-md-10">
               <div class="input-space">
                 <input formControlName="nameOnCard" type="text" />
+                <div
+                  *ngIf="
+                    creditCardNameOnCard?.invalid &&
+                    (creditCardNameOnCard?.dirty ||
+                      creditCardNameOnCard?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="creditCardNameOnCard?.errors?.['required'] || creditCardNameOnCard?.errors?.['notOnlyWhiteSpace']"
+                  >
+                    Name is required
+                  </div>
+                  <div *ngIf="creditCardNameOnCard?.errors?.['minlength']">
+                    Minimum length is 2
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -347,6 +451,20 @@
             <div class="col-md-10">
               <div class="input-space">
                 <input formControlName="cardNumber" type="text" />
+                <div
+                  *ngIf="
+                    creditCardNumber?.invalid &&
+                    (creditCardNumber?.dirty || creditCardNumber?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="creditCardNumber?.errors?.['required']">
+                    Card number is required
+                  </div>
+                  <div *ngIf="creditCardNumber?.errors?.['pattern']">
+                    Credit card must be 16 digits
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -358,6 +476,21 @@
             <div class="col-md-10">
               <div class="input-space">
                 <input formControlName="securityCode" type="text" />
+                <div
+                  *ngIf="
+                    creditCardSecurityCode?.invalid &&
+                    (creditCardSecurityCode?.dirty ||
+                      creditCardSecurityCode?.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="creditCardSecurityCode?.errors?.['required']">
+                    Security code is required
+                  </div>
+                  <div *ngIf="creditCardSecurityCode?.errors?.['pattern']">
+                    Security code must be 3 digits
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -400,7 +533,7 @@
           <h3>Review your order</h3>
           <p>Total quantity: {{ totalQuantity }}</p>
           <p>Shipping: FREE</p>
-          <p>Total price: {{ totalPrice }}</p>
+          <p>Total price: {{ totalPrice | currency : "USD" }}</p>
         </div>
 
         <div class="text-center">
