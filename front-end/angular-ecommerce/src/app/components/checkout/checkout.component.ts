@@ -6,9 +6,16 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { Country } from 'src/app/common/country';
+import { Customer } from 'src/app/common/customer';
+import { Order } from 'src/app/common/order';
+import { OrderItem } from 'src/app/common/order-item';
+import { Purchase } from 'src/app/common/purchase';
 import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart.service';
+import { CheckoutService } from 'src/app/services/checkout.service';
 import { ShopFormService } from 'src/app/services/shop-form.service';
 import { Luv2ShopValidators } from 'src/app/validators/luv2-shop-validators';
 
@@ -30,11 +37,17 @@ export class CheckoutComponent implements OnInit {
   shippingStates: State[] = [];
 
   constructor(
+    private router: Router,
     private formBuilder: FormBuilder,
     private cartService: CartService,
-    private formService: ShopFormService
+    private formService: ShopFormService,
+    private checkoutService: CheckoutService
   ) {
-    this.checkoutFormGroup = this.formBuilder.group({
+    this.checkoutFormGroup = this.createForms();
+  }
+
+  private createForms() {
+    return this.formBuilder.group({
       customer: this.formBuilder.group({
         firstName: new FormControl('', [
           Validators.required,
@@ -111,9 +124,79 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit() {
-    this.checkoutFormGroup.markAllAsTouched();
-    console.log('Submitted');
-    console.log(this.checkoutFormGroup.get('customer')?.value);
+    if (this.checkoutFormGroup.invalid) {
+      this.checkoutFormGroup.markAllAsTouched();
+      return;
+    }
+    const purchase: Purchase = new Purchase();
+
+    //add addresses
+    const shippingAddress = this.checkoutFormGroup.get('shippingAddress');
+    if (shippingAddress) {
+      purchase.shippingAddress = {
+        city: shippingAddress.get('city')?.value,
+        country: shippingAddress.get('country')?.value.name,
+        state: shippingAddress.get('state')?.value.name,
+        street: shippingAddress.get('street')?.value,
+        zipCode: shippingAddress.get('zipCode')?.value,
+      };
+    }
+
+    const billingAddress = this.checkoutFormGroup.get('billingAddress');
+    if (billingAddress) {
+      purchase.billingAddress = {
+        city: billingAddress.get('city')?.value,
+        country: billingAddress.get('country')?.value.name,
+        state: billingAddress.get('state')?.value.name,
+        street: billingAddress.get('street')?.value,
+        zipCode: billingAddress.get('zipCode')?.value,
+      };
+    }
+
+    //create Customer
+    // const customer: Customer = new Customer();
+    // const { firstName, lastName, email } =
+    //   this.checkoutFormGroup.get('customer')?.value;
+    // customer.firstName = firstName;
+    // customer.lastName = lastName;
+    // customer.email = email;
+    const customer = this.checkoutFormGroup.get('customer')?.value as Customer;
+    console.log(customer);
+
+    purchase.customer = customer;
+
+    //create order and orderItems
+    let order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+
+    purchase.order = order;
+    const orderItems: OrderItem[] = this.cartService.cartItems.map(
+      (item) => new OrderItem(item)
+    );
+
+    purchase.orderItems = orderItems;
+
+    // purchase: Purchase = createPurchase();
+
+    let orderTrackingNumber: string;
+
+    this.checkoutService.placeOrder(purchase).subscribe({
+      next: (data) => {
+        orderTrackingNumber = data.orderTrackingNumber;
+        console.log(orderTrackingNumber);
+        alert(`Tracking number: ${orderTrackingNumber}`);
+        this.resetCart();
+      },
+      error: (err) => {
+        alert(`Error occurred: ${err.message}`);
+      },
+    });
+  }
+  resetCart() {
+    this.cartService.resetCart();
+    this.checkoutFormGroup.reset();
+    this.router.navigateByUrl('/products');
   }
 
   ngOnInit(): void {
@@ -180,8 +263,7 @@ export class CheckoutComponent implements OnInit {
   }
   populateStates(formName: string) {
     const country = this.checkoutFormGroup.controls[formName].value.country;
-    console.log(formName);
-    console.log(country);
+
     this.formService.getStates(country.code).subscribe((data) => {
       if (formName == 'shippingAddress') {
         this.shippingStates = data;

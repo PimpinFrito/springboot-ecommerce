@@ -25,6 +25,13 @@ export class CartService {
 
     this.computeCartTotals();
   }
+
+  resetCart() {
+    this.cartItems = [];
+    this.totalPrice.next(0);
+    this.totalQuantity.next(0);
+  }
+
   computeCartTotals() {
     let runningTotalPrice = 0;
     let runningTotalQuantity = 0;
