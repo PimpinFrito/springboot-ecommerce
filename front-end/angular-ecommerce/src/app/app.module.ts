@@ -15,6 +15,8 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LoginButtonComponent } from './components/login-button/login-button.component';
+import { AuthService, provideAuth0 } from '@auth0/auth0-angular';
 
 const routes: Routes = [
   { path: 'checkout', component: CheckoutComponent },
@@ -38,6 +40,7 @@ const routes: Routes = [
     CartStatusComponent,
     CartDetailsComponent,
     CheckoutComponent,
+    LoginButtonComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -46,7 +49,7 @@ const routes: Routes = [
     NgbModule,
     ReactiveFormsModule,
   ],
-  providers: [ProductService],
-  bootstrap: [AppComponent],
+  providers: [ProductService, AuthService],
+  bootstrap: [AppComponent, AuthService],
 })
 export class AppModule {}
