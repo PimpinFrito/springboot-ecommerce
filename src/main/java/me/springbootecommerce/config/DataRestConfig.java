@@ -2,6 +2,7 @@ package me.springbootecommerce.config;
 
 import me.springbootecommerce.entity.*;
 import org.aspectj.weaver.ast.Or;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -13,19 +14,27 @@ import java.util.Arrays;
 @Configuration
 public class DataRestConfig implements RepositoryRestConfigurer {
 
+    @Value("${allowed.origins}")
+    String[] allowedOrigins;
+
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
 
+
         HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH};
-        Class[] classesToBlock = {Product.class, ProductCategory.class, Country.class, State.class, Order.class};
-        Arrays.asList(classesToBlock).forEach(target -> disableHttpMethods(target, config, theUnsupportedActions));
+        //For each Rest API endpoint exposed class, block theUnsupportedActions
+        Class<?>[] endpointsToBlock = {Product.class, ProductCategory.class, Country.class, State.class, Order.class};
+        for( Class<?> endpoint : endpointsToBlock){
+            disableHttpMethods(endpoint, config, theUnsupportedActions);
+        }
 
         //Expose ids for sidebar menu
         this.exposeIds(config);
+        cors.addMapping(config.getBasePath()+"/**").allowedOrigins(allowedOrigins);
 
     }
 
-    private void  disableHttpMethods(Class theClass, RepositoryRestConfiguration config,  HttpMethod[] unsupportedActions){
+    private void  disableHttpMethods(Class<?> theClass, RepositoryRestConfiguration config,  HttpMethod[] unsupportedActions){
 
         config.getExposureConfiguration()
                 .forDomainType(theClass)
