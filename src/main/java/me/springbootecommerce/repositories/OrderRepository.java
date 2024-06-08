@@ -10,4 +10,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByCustomerEmailOrderByDateCreatedDesc(String email, Pageable pageable);
+    
 }

@@ -1,0 +1,32 @@
+<ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+  <button
+    class="au-btn-submit"
+    (click)="
+      auth.logout({ logoutParams: { returnTo: document.location.origin } })
+    "
+  >
+    Log out
+  </button>
+</ng-container>
+
+<ng-template #loggedOut>
+  <button class="au-btn-submit" (click)="auth.loginWithRedirect()">
+    Log in
+  </button>
+</ng-template>
+
+<button
+  class="au-btn-submit"
+  *ngIf="auth.isAuthenticated$ | async"
+  routerLink="members"
+>
+  Members
+</button>
+
+<button
+  class="au-btn-submit"
+  *ngIf="auth.isAuthenticated$ | async"
+  routerLink="orderhistory"
+>
+  Order History
+</button>

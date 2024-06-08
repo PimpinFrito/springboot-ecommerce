@@ -1,11 +1,11 @@
 const config = {
-  domain: 'dev-eawonebv5dnnraat.us.auth0.com',
-  clientId: 'LZpBpacNI3TN0I7wtzxe5GOVO2QYwE2q',
+  domain: 'EXAMPLE DOMAIN',
+  clientId: 'CLIENT ID',
   authorizationParams: {
-    audience: 'https://dev-eawonebv5dnnraat.us.auth0.com/api/v2/',
+    audience: 'API IDENTIFIER',
   },
-  apiUri: 'http://localhost:8080',
-  appUri: 'http://localhost:4200',
+  apiUri: 'API URI',
+  appUri: 'WEB APP URI',
   errorPath: '/error',
 };
 
@@ -23,7 +23,7 @@ export const environment = {
     domain,
     clientId,
     authorizationParams: {
-      ...(audience && audience !== 'localhost:8080' ? { audience } : null),
+      audience,
       redirect_uri: window.location.origin,
     },
     errorPath,
