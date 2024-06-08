@@ -1,16 +1,34 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
-export const environment = {
-  production: false
+const config = {
+  domain: 'dev-eawonebv5dnnraat.us.auth0.com',
+  clientId: 'LZpBpacNI3TN0I7wtzxe5GOVO2QYwE2q',
+  authorizationParams: {
+    audience: 'https://dev-eawonebv5dnnraat.us.auth0.com/api/v2/',
+  },
+  apiUri: 'http://localhost:8080',
+  appUri: 'http://localhost:4200',
+  errorPath: '/error',
 };
 
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+const {
+  domain,
+  clientId,
+  authorizationParams: { audience },
+  apiUri,
+  errorPath,
+} = config;
+
+export const environment = {
+  production: false,
+  auth: {
+    domain,
+    clientId,
+    authorizationParams: {
+      ...(audience && audience !== 'localhost:8080' ? { audience } : null),
+      redirect_uri: window.location.origin,
+    },
+    errorPath,
+  },
+  httpInterceptor: {
+    allowedList: [`${apiUri}/*`],
+  },
+};

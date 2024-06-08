@@ -1,0 +1,10 @@
+{
+  "domain": "dev-eawonebv5dnnraat.us.auth0.com",
+  "clientId": "LZpBpacNI3TN0I7wtzxe5GOVO2QYwE2q",
+  "authorizationParams": {
+    "audience": "https://dev-eawonebv5dnnraat.us.auth0.com/api/v2/"
+  },
+  "apiUri": "http://localhost:3001",
+  "appUri": "http://localhost:4200",
+  "errorPath": "/error"
+}

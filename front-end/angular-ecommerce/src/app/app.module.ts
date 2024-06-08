@@ -17,6 +17,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginButtonComponent } from './components/login-button/login-button.component';
 import { AuthService, provideAuth0 } from '@auth0/auth0-angular';
+import { environment } from 'src/environments/environment';
 
 const routes: Routes = [
   { path: 'checkout', component: CheckoutComponent },
@@ -49,7 +50,16 @@ const routes: Routes = [
     NgbModule,
     ReactiveFormsModule,
   ],
-  providers: [ProductService, AuthService],
-  bootstrap: [AppComponent, AuthService],
+  providers: [
+    AuthService,
+    ProductService,
+    provideAuth0({
+      ...environment.auth,
+      httpInterceptor: {
+        ...environment.httpInterceptor,
+      },
+    }),
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
