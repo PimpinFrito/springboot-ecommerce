@@ -1,11 +1,12 @@
+//FROM AUTH0
 const config = {
-  domain: 'EXAMPLE DOMAIN',
-  clientId: 'CLIENT ID',
+  domain: 'your-auth-domain.com',
+  clientId: 'your-client-id',
   authorizationParams: {
-    audience: 'API IDENTIFIER',
+    audience: 'your-audience',
   },
-  apiUri: 'API URI',
-  appUri: 'WEB APP URI',
+  apiUri: 'http://localhost:3001',
+  appUri: 'https://localhost:4200',
   errorPath: '/error',
 };
 
@@ -31,4 +32,5 @@ export const environment = {
   httpInterceptor: {
     allowedList: [`${apiUri}/*`],
   },
+  restApiUrl: 'https://localhost:8443/api',
 };

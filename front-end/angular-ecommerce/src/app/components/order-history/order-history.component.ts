@@ -8,8 +8,8 @@ import { OrderService } from 'src/app/services/order.service';
   styleUrls: ['./order-history.component.css'],
 })
 export class OrderHistoryComponent implements OnInit {
-  test: string = '';
-  orderList: OrderHistory[] = [];
+  storage: Storage = sessionStorage;
+  orderHistoryList: OrderHistory[] = [];
   constructor(private orderService: OrderService) {}
 
   ngOnInit(): void {
@@ -17,10 +17,11 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   handleOrderHistory() {
-    this.orderService.getOrderHistory('dsds').subscribe((data) => {
-      //console.log(data._embedded.orders);
-      console.log(data);
-      this.test = JSON.stringify(data);
+    const theEmail = this.storage.getItem('email') || '';
+    const parsedEmail = JSON.parse(theEmail);
+    this.orderService.getOrderHistory(parsedEmail).subscribe((data) => {
+      console.log(data._embedded);
+      this.orderHistoryList = data._embedded.orders;
     });
   }
 }

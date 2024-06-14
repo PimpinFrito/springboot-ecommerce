@@ -73,15 +73,7 @@ const routes: Routes = [
     HttpClientModule,
     NgbModule,
     ReactiveFormsModule,
-    AuthModule.forRoot({
-      domain: environment.auth.domain,
-      clientId: environment.auth.clientId,
-      authorizationParams: {
-        audience: environment.auth.authorizationParams.audience,
-        redirect_uri: environment.auth.authorizationParams.redirect_uri,
-      },
-      errorPath: environment.auth.errorPath,
-    }),
+    AuthModule.forRoot(environment.auth),
   ],
   providers: [
     AuthService,

@@ -7,6 +7,7 @@ import {
 import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -26,10 +27,13 @@ export class AuthIntercepterService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     let authReq = req;
 
-    console.log(this.authToken);
+    const securedEndPoints = [environment.restApiUrl + '/orders'];
 
     // If the user is authenticated, add the token to the headers
-    if (this.auth.isAuthenticated$ && this.authToken) {
+    if (
+      this.auth.isAuthenticated$ &&
+      securedEndPoints.some((url) => req.urlWithParams.includes(url))
+    ) {
       authReq = req.clone({
         setHeaders: {
           Authorization: `Bearer ${this.authToken}`,

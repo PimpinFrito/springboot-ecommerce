@@ -3,14 +3,15 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Product } from '../common/product';
 import { ProductCategory } from '../common/product-category';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private baseUrl = 'http://localhost:8080/api/';
-  private productUrl = this.baseUrl + `products`;
-  private baseCategoryUrl = this.baseUrl + `product-category`;
+  private baseUrl = environment.restApiUrl;
+  private productUrl = this.baseUrl + `/products`;
+  private categoryUrl = this.baseUrl + `/product-category`;
   private searchUrl = this.productUrl + '/search/findByNameContaining?name=';
 
   constructor(private httpClient: HttpClient) {}
@@ -43,7 +44,7 @@ export class ProductService {
 
   getCategoryList(): Observable<ProductCategory[]> {
     return this.httpClient
-      .get<GetCategoryResponse>(this.baseCategoryUrl)
+      .get<GetCategoryResponse>(this.categoryUrl)
       .pipe(map((response) => response._embedded.productCategory));
   }
 

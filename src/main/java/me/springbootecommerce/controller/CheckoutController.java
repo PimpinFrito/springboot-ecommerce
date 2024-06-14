@@ -21,15 +21,4 @@ public class CheckoutController {
     public PurchaseResponse placeOrder(@RequestBody Purchase purchase){
         return checkoutService.placeOrder(purchase);
     }
-
-    @GetMapping("/headers")
-    public String getHeaders(@RequestHeader Map<String, String> headers) {
-        headers.forEach((key, value) -> {
-            System.out.printf("Header '%s' = %s%n", key, value);
-        });
-        System.out.println("\n\n\n");
-
-        String success = "Success";
-        return success;
-    }
 }
