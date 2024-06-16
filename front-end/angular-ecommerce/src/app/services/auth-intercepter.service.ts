@@ -27,7 +27,10 @@ export class AuthIntercepterService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     let authReq = req;
 
-    const securedEndPoints = [environment.restApiUrl + '/orders'];
+    const securedEndPoints = [
+      environment.restApiUrl + '/orders',
+      environment.restApiUrl + '/checkout',
+    ];
 
     // If the user is authenticated, add the token to the headers
     if (

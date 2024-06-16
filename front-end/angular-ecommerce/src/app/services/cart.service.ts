@@ -9,8 +9,15 @@ export class CartService {
   cartItems: CartItem[] = [];
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
+  storage: Storage = localStorage;
 
-  constructor() {}
+  constructor() {
+    const storageCart = this.storage.getItem('cartItems');
+    if (storageCart) {
+      this.cartItems = JSON.parse(storageCart);
+      this.computeCartTotals();
+    }
+  }
 
   addToCart(addedCartItem: CartItem) {
     const existingCartItem = this.cartItems.find(
@@ -30,6 +37,7 @@ export class CartService {
     this.cartItems = [];
     this.totalPrice.next(0);
     this.totalQuantity.next(0);
+    this.persistCartItems();
   }
 
   computeCartTotals() {
@@ -41,13 +49,10 @@ export class CartService {
     }
     this.totalPrice.next(+runningTotalPrice.toFixed(2));
     this.totalQuantity.next(runningTotalQuantity);
-
-    this.logCartData(runningTotalPrice, runningTotalQuantity);
+    this.persistCartItems();
   }
-  logCartData(runningTotalPrice: number, runningTotalQuantity: number) {
-    console.log(`Running total price: ${runningTotalPrice}`);
-    console.log(`Running total quantity: ${runningTotalQuantity}`);
-    this.cartItems.forEach((cart) => console.log(cart));
+  persistCartItems() {
+    this.storage.setItem('cartItems', JSON.stringify(this.cartItems));
   }
 
   decreaseQuantity(cartItem: CartItem) {
